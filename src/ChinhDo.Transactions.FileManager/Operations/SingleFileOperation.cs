@@ -19,9 +19,10 @@ namespace ChinhDo.Transactions.FileManager.Operations
         {
             this.path = path;
         }
-        public SingleFileOperation(string path,bool deleteBack)
+        public SingleFileOperation(string path,string backupPath, bool deleteBack)
         {
             this.path = path;
+            this.backupPath = backupPath;
             this.deleteBack = deleteBack;
         }
 
@@ -71,7 +72,7 @@ namespace ChinhDo.Transactions.FileManager.Operations
         {
             if (!disposed)
             {
-                if (backupPath != null && deleteBack)
+                if (!string.IsNullOrEmpty(backupPath)  && deleteBack && File.Exists(backupPath))
                 {
                     FileInfo fi = new FileInfo(backupPath);
                     if (fi.IsReadOnly)

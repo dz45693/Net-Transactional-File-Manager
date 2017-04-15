@@ -10,39 +10,30 @@ namespace ChinhDo.Transactions.FileManager.Operations
     {
         private readonly string sourceFileName;
         private readonly bool overwrite;
-        private readonly string backRoot;
-        private readonly string replaceRoot;
         /// <summary>
         /// Instantiates the class.
         /// </summary>
         /// <param name="sourceFileName">The file to copy.</param>
         /// <param name="destFileName">The name of the destination file.</param>
         /// <param name="overwrite">true if the destination file can be overwritten, otherwise false.</param>
-        /// <param name="backRoot">back file root.</param>
-        /// <param name="replaceRoot">old file root.</param>
-        /// <param name="deleteBack">if  delete back files.</param>
-        public Copy(string sourceFileName, string destFileName, bool overwrite,string backRoot="",string replaceRoot="",bool deleteBack=true)
-            : base(destFileName,deleteBack)
+        /// <param name="backupPath">back up file name.</param>
+        /// <param name="deleteBack">if true delete back file.</param>
+        public Copy(string sourceFileName, string destFileName, bool overwrite,string backupPath = "",bool deleteBack=true)
+            : base(destFileName, backupPath,deleteBack)
         {
             this.sourceFileName = sourceFileName;
             this.overwrite = overwrite;
-            this.backRoot = backRoot;
-            this.replaceRoot = replaceRoot;
         }
 
         public override void Execute()
         {
             if (File.Exists(path))
             {
-                string temp = string.Empty;
-                if (!string.IsNullOrEmpty(backRoot)&& !string.IsNullOrEmpty(replaceRoot)) {                 
-                    temp = path.Replace(replaceRoot,backRoot);
-                }
-                else
+                string temp = FileUtils.GetTempFileName(Path.GetExtension(path));
+                if (!string.IsNullOrEmpty(backupPath))
                 {
-                    temp = FileUtils.GetTempFileName(Path.GetExtension(path));
+                    temp = backupPath;
                 }
-                 
                 File.Copy(path, temp);
                 backupPath = temp;
             }

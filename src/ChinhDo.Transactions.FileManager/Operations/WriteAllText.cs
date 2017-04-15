@@ -15,7 +15,9 @@ namespace ChinhDo.Transactions.FileManager.Operations
         /// </summary>
         /// <param name="path">The file to write to.</param>
         /// <param name="contents">The string to write to the file.</param>
-        public WriteAllText(string path, string contents)
+        /// <param name="backupPath">back up file name.</param>
+        /// <param name="deleteBack">if true delete back file.</param>
+        public WriteAllText(string path, string contents, string backupPath = "", bool deleteBack = true)
             : base(path)
         {
             this.contents = contents;
@@ -26,6 +28,10 @@ namespace ChinhDo.Transactions.FileManager.Operations
             if (File.Exists(path))
             {
                 string temp = FileUtils.GetTempFileName(Path.GetExtension(path));
+                if (!string.IsNullOrEmpty(backupPath))
+                {
+                    temp = backupPath;
+                }
                 File.Copy(path, temp);
                 backupPath = temp;
             }

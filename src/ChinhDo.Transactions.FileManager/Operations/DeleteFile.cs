@@ -12,8 +12,10 @@ namespace ChinhDo.Transactions.FileManager.Operations
         /// Instantiates the class.
         /// </summary>
         /// <param name="path">The file to be deleted.</param>
-        public DeleteFile(string path)
-            : base(path)
+        /// <param name="backupPath">back up file name.</param>
+        /// <param name="deleteBack">if true delete back file.</param>
+        public DeleteFile(string path,string backupPath="",bool deleteBack=true)
+            : base(path, backupPath, deleteBack)
         {
         }
 
@@ -22,6 +24,10 @@ namespace ChinhDo.Transactions.FileManager.Operations
             if (File.Exists(path))
             {
                 string temp = FileUtils.GetTempFileName(Path.GetExtension(path));
+                if (!string.IsNullOrEmpty(backupPath))
+                {
+                    temp = backupPath;
+                }
                 File.Copy(path, temp);
                 backupPath = temp;
             }
